@@ -1,7 +1,7 @@
-yusmap
+ZNI Map
 =====
 
-Y_U's Server Map
+Zeenai Server Map
 
 
 
