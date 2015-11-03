@@ -59,6 +59,7 @@ DynMap.prototype = {
 	playerfield: null,
 	layercontrol: undefined,
 	nogui: false,
+	nocompass: false,
 	formatUrl: function(name, options) {
 		var url = this.options.url[name];
 		$.each(options, function(n,v) {
@@ -109,6 +110,10 @@ DynMap.prototype = {
 		urlarg = me.getParameterByName('nogui');
 		if(urlarg != "") {
 			me.nogui = (urlarg == 'true');
+		}
+		urlarg = me.getParameterByName('nocompass');
+		if(urlarg != "") {
+			me.nocompass = (urlarg == 'true');
 		}
 	},
 	initialize: function() {
@@ -384,7 +389,7 @@ DynMap.prototype = {
 			addClass('compass');
 		if(L.Browser.mobile)
 			compass.addClass('mobilecompass');
-		if (!me.nogui) {
+		if ((!me.nogui) && (!me.nocompass)) {
 			compass.appendTo(container);
 		}
 		
@@ -952,8 +957,12 @@ DynMap.prototype = {
 		var me = this;
 		var url = window.location.pathname;
 		var center = me.maptype.getProjection().fromLatLngToLocation(me.map.getCenter(), 64);
-		url = url + "?worldname=" + me.world.name + "&mapname=" + me.maptype.options.name + "&zoom=" + me.map.getZoom() + "&x=" + center.x + "&y=" +
-			center.y + "&z=" + center.z;
+		if(me.options['round-coordinates'])
+			url = url + "?worldname=" + me.world.name + "&mapname=" + me.maptype.options.name + "&zoom=" + me.map.getZoom() + "&x=" + center.x + "&y=" +
+				center.y + "&z=" + center.z;
+		else
+			url = url + "?worldname=" + me.world.name + "&mapname=" + me.maptype.options.name + "&zoom=" + me.map.getZoom() + "&x=" +
+				Math.round(center.x) + "&y=" + Math.round(center.y) + "&z=" + Math.round(center.z);
 		return url;
 	},
 	initLogin: function() {
